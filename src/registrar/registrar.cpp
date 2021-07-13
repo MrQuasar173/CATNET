@@ -16,8 +16,9 @@
 #include "../logging/include/log.hpp"
 #include <vector>
 
-void
-Registrar::init()
+using namespace Registrar;
+
+RegistrarState::RegistrarState()
 {
 	CND_DAEMON_TRACE("Constructing registrar....");
 
@@ -26,24 +27,17 @@ Registrar::init()
 	// needs to do is connect to a wasker and inform it that it has connected
     // this section will also deal with storing participant info with JSON in the future
     tcp_init();
-	
-    // NOTICE: threads will be implemented when it is neccicary for the
-	// registrar to do multiple things at once. Currently, all the registrar
-	// needs to do is connect to a wasker and inform it that it has connected
-
-	// this section will also deal with storing participant info with JSON in
-	// the future
 }
 
 void
-Registrar::tcp_init()
+RegistrarState::tcp_init()
 {
 	CND_DAEMON_TRACE("Creating tcp server socket for registrar...");
 	s_server.emplace("localhost", 44400);
 }
 
 void
-Registrar::run()
+RegistrarState::run()
 {
 	CND_DAEMON_TRACE("Running in registrar mode....");
 	if (!s_server.has_value()) {
@@ -65,7 +59,7 @@ Registrar::run()
 }
 
 void
-Registrar::confirm_connection()
+RegistrarState::confirm_connection()
 {    
     std::vector<unsigned char> recieved_message{};
     
@@ -97,8 +91,7 @@ Registrar::confirm_connection()
     }
 }
 
-void
-Registrar::destroy()
+RegistrarState::~RegistrarState()
 {
 	CND_DAEMON_TRACE("Destructing registrar....");
 }
